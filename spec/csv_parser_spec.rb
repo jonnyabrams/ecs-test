@@ -1,8 +1,9 @@
 require 'csv_parser'
+require 'csv'
 
 describe CsvParser do
   
-  let(:file_path) { './fixtures/test_file.csv' }
+  let(:file_path) { 'spec/fixtures/test_file.csv' }
   subject(:parser) { described_class.new(file_path) }
 
   describe '#initialize' do
@@ -13,7 +14,7 @@ describe CsvParser do
 
   describe '#parse' do
     it 'parses a csv file' do
-      expect(parser.parse).to eq "Hello World"
+      expect(parser.parse["CompanyName"]).to eq "Test Name 1"
     end
   end
 end
