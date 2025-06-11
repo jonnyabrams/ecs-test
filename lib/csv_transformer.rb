@@ -58,6 +58,7 @@ class CsvTransformer
 
   def compare(a, comparator, b)
     # TODO: handle different types - this implementation is set up only for strings
+    # TODO: raise error if a is not a valid header/attr
     case comparator
     when "===", "=="
       a == b
