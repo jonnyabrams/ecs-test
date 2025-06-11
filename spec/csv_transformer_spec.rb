@@ -13,7 +13,6 @@ describe CsvTransformer do
 
   describe '#transform' do
     it 'transforms a csv file into the desired columns' do
-
       first_row = {
         "company_name" => "ACTIVE COMPANY LTD",
         "company_number" => "11111111",
@@ -35,7 +34,6 @@ describe CsvTransformer do
   end
 
   describe 'filter for only active companies' do
-
     it 'filters for only active companies' do
       all_results = transformer.transform
       active_results = transformer.transform(filters: [
