@@ -1,9 +1,8 @@
-require 'csv_transformer'
 require 'csv'
+require 'csv_transformer'
 
 describe CsvTransformer do
-  # usually I would create a test fixture, but for the purposes of this tech test I'm just using the CSV provided
-  let(:file_path) { './companies-input.csv' }
+  let(:file_path) { './spec/fixtures/test-companies.csv' }
   subject(:transformer) { described_class.new(file_path) }
 
   describe '#initialize' do
@@ -16,22 +15,37 @@ describe CsvTransformer do
     it 'transforms a csv file into the desired columns' do
 
       first_row = {
-        "company_name" => "FOUNDRY HEALTHCARE LTD",
-        "company_number" => "11350745",
-        "address" => "SCHOOL HILL HOUSE, LEWES, BN7 2LU",
+        "company_name" => "ACTIVE COMPANY LTD",
+        "company_number" => "11111111",
+        "address" => "123 Main St, London, SW1A 1AA",
         "previous_name" => "N/A"
       }
 
       second_row = {
-        "company_name" => "FOUNDRY HILL LTD",
-        "company_number" => "08266458",
-        "address" => "LANG BENNETTS THE OLD CARRIAGE WORKS, TRURO, TR1 1DG",
+        "company_name" => "DORMANT COMPANY LTD",
+        "company_number" => "22222222",
+        "address" => "456 High St, Manchester, M1 1AA",
         "previous_name" => "N/A"
       }
 
       expect(transformer.transform[0].to_h).to eq first_row
       expect(transformer.transform[1].to_h).to eq second_row
-      expect(transformer.transform.length).to eq 24
+      expect(transformer.transform.length).to eq 3
+    end
+  end
+
+  describe 'filter for only active companies' do
+
+    it 'filters for only active companies' do
+      all_results = transformer.transform
+      active_results = transformer.transform(filter_for_active_companies: true)
+
+      expect(all_results.length).to eq 3
+      expect(active_results.length).to eq 2
+      
+      active_company_names = active_results.map { |row| row["company_name"] }
+      expect(active_company_names).to include("ACTIVE COMPANY LTD", "ANOTHER ACTIVE LTD")
+      expect(active_company_names).not_to include("DORMANT COMPANY LTD")
     end
   end
 end

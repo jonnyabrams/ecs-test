@@ -1,0 +1,4 @@
+CompanyName,CompanyNumber,RegAddress.AddressLine1,RegAddress.PostTown,RegAddress.PostCode,CompanyStatus,PreviousName_1.CompanyName
+ACTIVE COMPANY LTD,11111111,123 Main St,London,SW1A 1AA,Active,
+DORMANT COMPANY LTD,22222222,456 High St,Manchester,M1 1AA,Dormant,
+ANOTHER ACTIVE LTD,33333333,789 Park Ave,Birmingham,B1 1AA,Active,OLD NAME LTD

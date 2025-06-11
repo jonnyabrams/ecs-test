@@ -5,10 +5,14 @@ class CsvTransformer
     @file_path = file_path
   end
 
-  def transform
+  def transform(filter_for_active_companies: false)
     csv_text = File.read(@file_path)
 
     csv = CSV.parse(csv_text, :headers => true, header_converters: lambda { |h| h.strip })
+
+    if filter_for_active_companies
+      csv = csv.filter { |row| row["CompanyStatus"].downcase === "active" }
+    end
 
     csv.map { |row| transform_row(row) }
   end
