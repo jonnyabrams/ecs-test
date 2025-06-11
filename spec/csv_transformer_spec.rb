@@ -38,7 +38,11 @@ describe CsvTransformer do
 
     it 'filters for only active companies' do
       all_results = transformer.transform
-      active_results = transformer.transform(filter_for_active_companies: true)
+      active_results = transformer.transform(filters: [
+        attribute: "CompanyStatus",
+        comparator: "===",
+        value: "active"
+      ])
 
       expect(all_results.length).to eq 3
       expect(active_results.length).to eq 2

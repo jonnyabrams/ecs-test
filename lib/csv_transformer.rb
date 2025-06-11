@@ -5,13 +5,13 @@ class CsvTransformer
     @file_path = file_path
   end
 
-  def transform(filter_for_active_companies: false)
+  def transform(filters: [])
     csv_text = File.read(@file_path)
 
     csv = CSV.parse(csv_text, :headers => true, header_converters: lambda { |h| h.strip })
 
-    if filter_for_active_companies
-      csv = csv.filter { |row| row["CompanyStatus"].downcase === "active" }
+    if filters.any?
+      csv = csv.select { |row| row_matches_all_filters?(row, filters) }
     end
 
     csv.map { |row| transform_row(row) }
@@ -40,5 +40,35 @@ class CsvTransformer
 
   def safe_value(value)
     value.nil? || value.strip.empty? ? "N/A" : value
+  end
+
+  def row_matches_all_filters?(row, filters)
+    filters.all? do |filter|
+      attribute = filter[:attribute]
+      comparator = filter[:comparator]
+      value = filter[:value].downcase
+
+      cell_value = row[attribute].downcase
+
+      next false if cell_value.nil?
+
+      compare(cell_value.strip, comparator, value)
+    end
+  end
+
+  def compare(a, comparator, b)
+    # TODO: handle different types - this implementation is set up only for strings
+    case comparator
+    when "===", "=="
+      a == b
+    when "!==", "!="
+      a != b
+    when ">"
+      a > b
+    when "<"
+      a < b
+    else
+      raise ArgumentError, "Unsupported comparator: #{comparator}"
+    end
   end
 end
